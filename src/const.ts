@@ -40,13 +40,13 @@ export const KMAP_PLACE_ID = 8622892
 export const BRIDE_FULLNAME = "신태정"
 export const BRIDE_FIRSTNAME = "태정"
 export const BRIDE_TITLE = "장녀"
-export const BRIDE_FATHER = "---"
-export const BRIDE_MOTHER = "---"
+export const BRIDE_FATHER = "신용성"
+export const BRIDE_MOTHER = "허난영"
 export const BRIDE_INFO = [
   {
     relation: "신부",
     name: BRIDE_FULLNAME,
-    phone: "010-5138-5510",
+    phone: "010-7407-3250",
     account: "우리은행 0000000000000",
   },
   {

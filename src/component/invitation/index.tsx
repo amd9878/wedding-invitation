@@ -29,7 +29,7 @@ export const Invitation = () => {
       <div className="content">그래서 서로에게 더 특별합니다."</div>
       <div className="break" />
       <div className="content">여우와 토끼처럼 다른 두 사람이 만나</div>
-      <div className="content">평생의 팀이 되기로 해</div>
+      <div className="content">평생의 한 팀이 되기로 했습니다</div>
       <div className="break" />
       <div className="content">저희의 첫 페이지를 함께해 주세요.</div>
       <div className="break" />
