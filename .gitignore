@@ -17,5 +17,5 @@ npm-debug.log*
 .env
 
 # 개인 이미지 제외
-src/images/
 public/preview_image.png
+public/preview_image.jpg
