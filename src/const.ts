@@ -85,9 +85,16 @@ export const SHUTTLE_INFO: string[] = [
 // 탭이 하나도 없거나 모든 content가 비어있으면 안내사항 섹션 자체가 표시되지 않습니다.
 // 예: { label: "주차", content: "지하 2층~5층 주차 가능\n2시간 무료 (접수대에서 등록)" }
 export const NOTICE_TABS: Array<{ label: string; content: string }> = [
-  // { label: "주차", content: "" },
-  // { label: "식사", content: "" },
-  // { label: "기타", content: "" },
+  {
+    label: "주차",
+    content:
+      "건물 지하 2층~5층 주차 가능합니다.\n\n행사장 접수대에서 주차 등록 시\n2시간 무료로 이용하실 수 있습니다.\n\n2시간 초과 시 10분당 1,000원이 부과됩니다.",
+  },
+  {
+    label: "식사",
+    content:
+      "식권은 축의금 접수대에서 받으실 수 있습니다.\n\n필요한 매수를 말씀해 주시면\n접수 담당자가 드립니다.",
+  },
 ]
 
 export const GROOM_INFO = [

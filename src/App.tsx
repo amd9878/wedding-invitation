@@ -37,14 +37,14 @@ function App() {
         <LazyDiv className="card-group">
           {/* 오시는길 */}
           <Location />
-
-          {/* 안내사항 (NOTICE_TABS에 내용이 있을 때만 표시) */}
-          <Notice />
         </LazyDiv>
 
         <LazyDiv className="card-group">
           {/* 마음 전하기 */}
           <Information />
+
+          {/* 안내사항 (NOTICE_TABS에 내용이 있을 때만 표시) */}
+          <Notice />
 
           {/* 방명록 (Firebase 설정 시 표시) */}
           {isFirebaseConfigured && <GuestBook />}
