@@ -12,16 +12,16 @@
 @use "./component/musicPlayer";
 
 :root {
-  --theme-color: #ff8585;
-  --theme-bg-color: #ffe7e7;
-  --alt-color: #c28080;
-  --alt-bg-color: #f4f0f0;
-  --dark-color: #282c34;
-  --dark-grey-color: #d2d2d2;
-  --light-grey-color: #eaeaea;
-  --light-color: #f9f9f9;
+  --theme-color: #b8965a;
+  --theme-bg-color: #f0ebe2;
+  --alt-color: #8a7045;
+  --alt-bg-color: #ece7de;
+  --dark-color: #1e1a17;
+  --dark-grey-color: #cdc9c0;
+  --light-grey-color: #e8e3da;
+  --light-color: #faf7f2;
   --white-color: #ffffff;
-  --red-color: #ff0000;
+  --red-color: #c0392b;
 
   font-family: "MapoGoldenPier";
   font-size: 20px;
@@ -102,7 +102,7 @@ body {
 }
 
 .background {
-  background-color: var(--theme-bg-color);
+  background-color: #e4ddd1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,7 +205,10 @@ h2 {
   color: var(--theme-color);
   font-weight: normal;
   &.english {
-    font-family: "Allura";
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.08em;
   }
 }
 
