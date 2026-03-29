@@ -2,8 +2,8 @@ import {
   BRIDE_FULLNAME,
   GROOM_FULLNAME,
   LOCATION,
-  SHARE_ADDRESS,
-  SHARE_ADDRESS_TITLE,
+  NMAP_PLACE_ID,
+  KMAP_PLACE_ID,
   WEDDING_DATE,
   WEDDING_DATE_FORMAT,
 } from "../../const"
@@ -12,6 +12,9 @@ import { LazyDiv } from "../lazyDiv"
 import { useKakao } from "../store"
 
 const baseUrl = import.meta.env.BASE_URL
+
+const KAKAO_MAP_URL = `https://place.map.kakao.com/${KMAP_PLACE_ID}`
+const NAVER_MAP_URL = `https://map.naver.com/p/entry/place/${NMAP_PLACE_ID}`
 
 export const ShareButton = () => {
   const kakao = useKakao()
@@ -29,9 +32,7 @@ export const ShareButton = () => {
             baseUrl.replace(/\/$/, "")
 
           kakao.Share.sendDefault({
-            objectType: "location",
-            address: SHARE_ADDRESS,
-            addressTitle: SHARE_ADDRESS_TITLE,
+            objectType: "feed",
             content: {
               title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
               description:
@@ -44,10 +45,17 @@ export const ShareButton = () => {
             },
             buttons: [
               {
-                title: "초대장 보기",
+                title: "카카오맵 오시는 길",
                 link: {
-                  mobileWebUrl: pageUrl,
-                  webUrl: pageUrl,
+                  mobileWebUrl: KAKAO_MAP_URL,
+                  webUrl: KAKAO_MAP_URL,
+                },
+              },
+              {
+                title: "네이버지도 오시는 길",
+                link: {
+                  mobileWebUrl: NAVER_MAP_URL,
+                  webUrl: NAVER_MAP_URL,
                 },
               },
             ],

@@ -17,6 +17,7 @@
       color: var(--dark-grey-color);
       position: relative;
       transition: color 0.2s;
+      cursor: pointer;
 
       &.active {
         color: var(--theme-color);

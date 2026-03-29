@@ -12,6 +12,9 @@ import { LazyDiv } from "./component/lazyDiv"
 import { ShareButton } from "./component/shareButton"
 import { MusicPlayer } from "./component/musicPlayer"
 import { isFirebaseConfigured } from "./lib/firebase"
+import { NOTICE_TABS } from "./const"
+
+const hasNotice = NOTICE_TABS.some((t) => t.content.trim())
 
 function App() {
   return (
@@ -42,13 +45,21 @@ function App() {
         <LazyDiv className="card-group">
           {/* 마음 전하기 */}
           <Information />
-
-          {/* 안내사항 (NOTICE_TABS에 내용이 있을 때만 표시) */}
-          <Notice />
-
-          {/* 방명록 (Firebase 설정 시 표시) */}
-          {isFirebaseConfigured && <GuestBook />}
         </LazyDiv>
+
+        {/* 안내사항 — 내용이 있을 때만 독립 섹션으로 표시 */}
+        {hasNotice && (
+          <LazyDiv className="card-group">
+            <Notice />
+          </LazyDiv>
+        )}
+
+        {/* 방명록 — Firebase 설정 시 독립 섹션으로 표시 */}
+        {isFirebaseConfigured && (
+          <LazyDiv className="card-group">
+            <GuestBook />
+          </LazyDiv>
+        )}
 
         <ShareButton />
       </div>
