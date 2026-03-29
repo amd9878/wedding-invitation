@@ -1,166 +1,155 @@
 import { useEffect, useMemo, useRef, useState } from "react"
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore"
+import { signInAnonymously } from "firebase/auth"
 import { Button } from "../button"
 import { dayjs } from "../../const"
 import { LazyDiv } from "../lazyDiv"
 import { useModal } from "../modal"
-import offlineGuestBook from "./offlineGuestBook.json"
-import { SERVER_URL } from "../../env"
+import { firebaseAuth, firebaseDb } from "../../lib/firebase"
+import { containsProfanity } from "./profanityFilter"
+
+const COOLDOWN_MS = 30_000
+const COOLDOWN_KEY = "guestbook_last_submit_at"
 
 const RULES = {
-  name: {
-    maxLength: 10,
-  },
-  content: {
-    maxLength: 100,
-  },
-  password: {
-    minLength: 4,
-    maxLength: 20,
-  },
+  name: { maxLength: 10 },
+  content: { maxLength: 100 },
 }
 
-const PAGES_PER_BLOCK = 5
 const POSTS_PER_PAGE = 5
+const PAGES_PER_BLOCK = 5
 
 type Post = {
-  id: number
-  timestamp: number
+  id: string
+  uid: string
   name: string
   content: string
+  createdAt: number
 }
 
-export const GuestBook = () => {
-  const { openModal, closeModal } = useModal()
-
-  const [posts, setPosts] = useState<Post[]>([])
-
-  const loadPosts = async () => {
-    if (SERVER_URL) {
-      try {
-        const res = await fetch(
-          `${SERVER_URL}/guestbook?offset=${0}&limit=${3}`,
-        )
-        if (res.ok) {
-          const data = await res.json()
-
-          setPosts(data.posts)
-        }
-      } catch (error) {
-        console.error("Error loading posts:", error)
-      }
-    } else {
-      setPosts(offlineGuestBook.slice(0, 3))
-    }
-  }
+function useFirebaseAuth() {
+  const [uid, setUid] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    loadPosts()
+    if (!firebaseAuth) return
+    signInAnonymously(firebaseAuth)
+      .then(() => {
+        setUid(firebaseAuth!.currentUser?.uid ?? null)
+        setReady(true)
+      })
+      .catch(console.error)
   }, [])
+
+  return { uid, ready }
+}
+
+function usePosts(previewLimit?: number) {
+  const [posts, setPosts] = useState<Post[]>([])
+
+  useEffect(() => {
+    if (!firebaseDb) return
+    const q = query(
+      collection(firebaseDb, "guestbook"),
+      orderBy("createdAt", "desc"),
+    )
+    const unsub = onSnapshot(q, (snap) => {
+      const all = snap.docs.map((d) => {
+        const data = d.data()
+        return {
+          id: d.id,
+          uid: data.uid ?? "",
+          name: data.name ?? "",
+          content: data.content ?? "",
+          createdAt: data.createdAt?.seconds ?? 0,
+        }
+      })
+      setPosts(previewLimit ? all.slice(0, previewLimit) : all)
+    })
+    return unsub
+  }, [previewLimit])
+
+  return posts
+}
+
+async function deletePost(postId: string) {
+  if (!firebaseDb) return
+  if (!window.confirm("삭제하시겠습니까?")) return
+  await deleteDoc(doc(firebaseDb, "guestbook", postId))
+}
+
+// ─── 메인 카드 ────────────────────────────────────────────────
+export const GuestBook = () => {
+  const { openModal, closeModal } = useModal()
+  const { uid, ready } = useFirebaseAuth()
+  const previewPosts = usePosts(3)
 
   return (
     <LazyDiv className="card guestbook">
       <h2 className="english">Guest Book</h2>
-
       <div className="break" />
 
-      {posts.map((post) => (
-        <div key={post.id} className="post">
-          <div className="heading">
-            <button
-              className="close-button"
-              onClick={async () => {
-                if (SERVER_URL) {
-                  openModal({
-                    className: "delete-guestbook-modal",
-                    closeOnClickBackground: false,
-                    header: <div className="title">삭제하시겠습니까?</div>,
-                    content: (
-                      <DeleteGuestBookModal
-                        postId={post.id}
-                        onSuccess={() => {
-                          loadPosts()
-                        }}
-                      />
-                    ),
-                    footer: (
-                      <>
-                        <Button
-                          buttonStyle="style2"
-                          type="submit"
-                          form="guestbook-delete-form"
-                        >
-                          삭제하기
-                        </Button>
-                        <Button
-                          buttonStyle="style2"
-                          className="bg-light-grey-color text-dark-color"
-                          onClick={closeModal}
-                        >
-                          닫기
-                        </Button>
-                      </>
-                    ),
-                  })
-                }
-              }}
-            />
-          </div>
-          <div className="body">
-            <div className="title">
-              <div className="name">{post.name}</div>
-              <div className="date">
-                {dayjs.unix(post.timestamp).format("YYYY-MM-DD")}
-              </div>
-            </div>
-            <div className="content">{post.content}</div>
-          </div>
-        </div>
+      {previewPosts.map((post) => (
+        <PostItem
+          key={post.id}
+          post={post}
+          currentUid={uid}
+          onDelete={() => deletePost(post.id)}
+        />
       ))}
 
       <div className="break" />
 
-      {SERVER_URL && (
-        <>
-          <Button
-            onClick={() =>
-              openModal({
-                className: "write-guestbook-modal",
-                closeOnClickBackground: false,
-                header: (
-                  <div className="title-group">
-                    <div className="title">방명록 작성하기</div>
-                    <div className="subtitle">
-                      신랑, 신부에게 축하의 마음을 전해주세요.
-                    </div>
+      {ready && (
+        <Button
+          onClick={() =>
+            openModal({
+              className: "write-guestbook-modal",
+              closeOnClickBackground: false,
+              header: (
+                <div className="title-group">
+                  <div className="title">방명록 작성하기</div>
+                  <div className="subtitle">
+                    신랑, 신부에게 축하의 마음을 전해주세요.
                   </div>
-                ),
-                content: <WriteGuestBookModal loadPosts={loadPosts} />,
-                footer: (
-                  <>
-                    <Button
-                      buttonStyle="style2"
-                      type="submit"
-                      form="guestbook-write-form"
-                    >
-                      저장하기
-                    </Button>
-                    <Button
-                      buttonStyle="style2"
-                      className="bg-light-grey-color text-dark-color"
-                      onClick={closeModal}
-                    >
-                      닫기
-                    </Button>
-                  </>
-                ),
-              })
-            }
-          >
-            방명록 작성하기
-          </Button>
-          <div className="break" />
-        </>
+                </div>
+              ),
+              content: <WriteModal uid={uid} />,
+              footer: (
+                <>
+                  <Button
+                    buttonStyle="style2"
+                    type="submit"
+                    form="guestbook-write-form"
+                  >
+                    저장하기
+                  </Button>
+                  <Button
+                    buttonStyle="style2"
+                    className="bg-light-grey-color text-dark-color"
+                    onClick={closeModal}
+                  >
+                    닫기
+                  </Button>
+                </>
+              ),
+            })
+          }
+        >
+          방명록 작성하기
+        </Button>
       )}
+
+      <div className="break" />
 
       <Button
         onClick={() =>
@@ -168,7 +157,7 @@ export const GuestBook = () => {
             className: "all-guestbook-modal",
             closeOnClickBackground: true,
             header: <div className="title">방명록 전체보기</div>,
-            content: <AllGuestBookModal loadPosts={loadPosts} />,
+            content: <AllModal currentUid={uid} />,
             footer: (
               <Button
                 buttonStyle="style2"
@@ -187,12 +176,40 @@ export const GuestBook = () => {
   )
 }
 
-const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
-  const inputRef = useRef({}) as React.RefObject<{
-    name: HTMLInputElement
-    content: HTMLTextAreaElement
-    password: HTMLInputElement
-  }>
+// ─── 게시글 아이템 ─────────────────────────────────────────────
+const PostItem = ({
+  post,
+  currentUid,
+  onDelete,
+}: {
+  post: Post
+  currentUid: string | null
+  onDelete: () => void
+}) => (
+  <div className="post">
+    <div className="heading">
+      {currentUid && post.uid === currentUid && (
+        <button className="close-button" onClick={onDelete} />
+      )}
+    </div>
+    <div className="body">
+      <div className="title">
+        <div className="name">{post.name}</div>
+        <div className="date">
+          {post.createdAt
+            ? dayjs.unix(post.createdAt).format("YYYY-MM-DD")
+            : ""}
+        </div>
+      </div>
+      <div className="content">{post.content}</div>
+    </div>
+  </div>
+)
+
+// ─── 작성 모달 ─────────────────────────────────────────────────
+const WriteModal = ({ uid }: { uid: string | null }) => {
+  const nameRef = useRef<HTMLInputElement>(null)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
   const { closeModal } = useModal()
   const [loading, setLoading] = useState(false)
 
@@ -202,18 +219,22 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
       className="form"
       onSubmit={async (e) => {
         e.preventDefault()
+        if (loading || !firebaseDb || !uid) return
         setLoading(true)
         try {
-          const name = inputRef.current.name.value.trim()
-          const content = inputRef.current.content.value.trim()
-          const password = inputRef.current.password.value
+          const name = nameRef.current?.value.trim() ?? ""
+          const content = contentRef.current?.value.trim() ?? ""
 
           if (!name) {
-            alert("이름을 입력해주세요.")
+            alert("닉네임을 입력해주세요.")
             return
           }
           if (name.length > RULES.name.maxLength) {
-            alert(`이름을 ${RULES.name.maxLength}자 이하로 입력해주세요.`)
+            alert(`닉네임을 ${RULES.name.maxLength}자 이하로 입력해주세요.`)
+            return
+          }
+          if (containsProfanity(name)) {
+            alert("닉네임에 사용할 수 없는 단어가 포함되어 있습니다.")
             return
           }
 
@@ -225,32 +246,30 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
             alert(`내용을 ${RULES.content.maxLength}자 이하로 입력해주세요.`)
             return
           }
-
-          if (password.length < RULES.password.minLength) {
-            alert(`비밀번호를 ${RULES.password.minLength}자 이상 입력해주세요.`)
+          if (containsProfanity(content)) {
+            alert("내용에 사용할 수 없는 단어가 포함되어 있습니다.")
             return
           }
-          if (password.length > RULES.password.maxLength) {
+
+          const last = Number(localStorage.getItem(COOLDOWN_KEY) || "0")
+          const remain = COOLDOWN_MS - (Date.now() - last)
+          if (remain > 0) {
             alert(
-              `비밀번호를 ${RULES.password.maxLength}자 이하로 입력해주세요.`,
+              `잠시만요! ${Math.ceil(remain / 1000)}초 후에 작성할 수 있어요.`,
             )
             return
           }
 
-          const res = await fetch(`${SERVER_URL}/guestbook`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, content, password }),
+          await addDoc(collection(firebaseDb, "guestbook"), {
+            uid,
+            name: name.slice(0, RULES.name.maxLength),
+            content: content.slice(0, RULES.content.maxLength),
+            createdAt: serverTimestamp(),
           })
-          if (!res.ok) {
-            throw new Error(res.statusText)
-          }
 
+          localStorage.setItem(COOLDOWN_KEY, String(Date.now()))
           alert("방명록 작성이 완료되었습니다.")
           closeModal()
-          loadPosts()
         } catch {
           alert("방명록 작성에 실패했습니다.")
         } finally {
@@ -258,15 +277,13 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
         }
       }}
     >
-      이름
+      닉네임
       <input
         disabled={loading}
         type="text"
-        placeholder="이름을 입력해주세요."
+        placeholder="닉네임을 입력해주세요. (최대 10자)"
         className="name"
-        ref={(ref) => {
-          inputRef.current.name = ref as HTMLInputElement
-        }}
+        ref={nameRef}
         maxLength={RULES.name.maxLength}
       />
       내용
@@ -274,242 +291,78 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
         disabled={loading}
         placeholder="축하 메세지를 100자 이내로 입력해주세요."
         className="content"
-        ref={(ref) => {
-          inputRef.current.content = ref as HTMLTextAreaElement
-        }}
+        ref={contentRef}
         maxLength={RULES.content.maxLength}
-      />
-      비밀번호
-      <input
-        disabled={loading}
-        type="password"
-        placeholder="비밀번호를 입력해주세요."
-        className="password"
-        ref={(ref) => {
-          inputRef.current.password = ref as HTMLInputElement
-        }}
-        maxLength={RULES.password.maxLength}
       />
     </form>
   )
 }
 
-const AllGuestBookModal = ({
-  loadPosts,
-}: {
-  loadPosts: () => Promise<void>
-}) => {
-  const [posts, setPosts] = useState<Post[]>([])
+// ─── 전체보기 모달 ─────────────────────────────────────────────
+const AllModal = ({ currentUid }: { currentUid: string | null }) => {
+  const allPosts = usePosts()
   const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
-  const { openModal, closeModal } = useModal()
 
-  const loadPage = async (page: number) => {
-    setCurrentPage(page)
-    if (SERVER_URL) {
-      try {
-        const offset = page * POSTS_PER_PAGE
-        const res = await fetch(
-          `${SERVER_URL}/guestbook?offset=${offset}&limit=${POSTS_PER_PAGE}`,
-        )
-        if (res.ok) {
-          const data = await res.json()
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE))
 
-          setPosts(data.posts)
-          setTotalPages(Math.ceil(data.total / POSTS_PER_PAGE))
-          if (data.total < offset) {
-            setCurrentPage(Math.ceil(data.total / POSTS_PER_PAGE) - 1)
-          }
-        }
-      } catch (error) {
-        console.error("Error loading posts:", error)
-      }
-    } else {
-      setCurrentPage(page)
+  const pagePosts = useMemo(
+    () =>
+      allPosts.slice(
+        currentPage * POSTS_PER_PAGE,
+        (currentPage + 1) * POSTS_PER_PAGE,
+      ),
+    [allPosts, currentPage],
+  )
 
-      setPosts(
-        offlineGuestBook.slice(
-          page * POSTS_PER_PAGE,
-          (page + 1) * POSTS_PER_PAGE,
-        ),
-      )
-      setTotalPages(Math.ceil(offlineGuestBook.length / POSTS_PER_PAGE))
-    }
-  }
-
-  useEffect(() => {
-    loadPage(0)
-  }, [])
-
-  const pages = useMemo(() => {
-    const start = Math.floor(currentPage / PAGES_PER_BLOCK) * PAGES_PER_BLOCK
+  const pageBlock = useMemo(() => {
+    const start =
+      Math.floor(currentPage / PAGES_PER_BLOCK) * PAGES_PER_BLOCK
     const end = Math.min(start + PAGES_PER_BLOCK, totalPages)
-
-    return Array.from({ length: end - start }).map((_, index) => index + start)
+    return Array.from({ length: end - start }, (_, i) => i + start)
   }, [currentPage, totalPages])
 
   return (
     <>
-      {posts.map((post) => (
-        <div key={post.id} className="post">
-          <div className="heading">
-            <div
-              className="close-button"
-              onClick={async () => {
-                if (SERVER_URL) {
-                  openModal({
-                    className: "delete-guestbook-modal",
-                    closeOnClickBackground: false,
-                    header: <div className="title">삭제하시겠습니까?</div>,
-                    content: (
-                      <DeleteGuestBookModal
-                        postId={post.id}
-                        onSuccess={() => {
-                          loadPosts()
-                          loadPage(currentPage)
-                        }}
-                      />
-                    ),
-                    footer: (
-                      <>
-                        <Button
-                          buttonStyle="style2"
-                          type="submit"
-                          form="guestbook-delete-form"
-                        >
-                          삭제하기
-                        </Button>
-                        <Button
-                          buttonStyle="style2"
-                          className="bg-light-grey-color text-dark-color"
-                          onClick={closeModal}
-                        >
-                          닫기
-                        </Button>
-                      </>
-                    ),
-                  })
-                }
-              }}
-            />
-          </div>
-          <div className="body">
-            <div className="title">
-              <div className="name">{post.name}</div>
-              <div className="date">
-                {dayjs.unix(post.timestamp).format("YYYY-MM-DD")}
-              </div>
-            </div>
-            <div className="content">{post.content}</div>
-          </div>
-        </div>
+      {pagePosts.map((post) => (
+        <PostItem
+          key={post.id}
+          post={post}
+          currentUid={currentUid}
+          onDelete={() => deletePost(post.id)}
+        />
       ))}
 
       <div className="break" />
 
       <div className="pagination">
-        {pages[0] > 0 && (
+        {pageBlock[0] > 0 && (
           <div
             className="page"
-            onClick={() => {
-              loadPage(pages[0] - 1)
-            }}
+            onClick={() => setCurrentPage(pageBlock[0] - 1)}
           >
             이전
           </div>
         )}
-        {pages.map((page) => (
+        {pageBlock.map((page) => (
           <div
-            className={`page${page === currentPage ? " current" : ""}`}
             key={page}
-            onClick={() => {
-              if (page === currentPage) return
-              loadPage(page)
-            }}
+            className={`page${page === currentPage ? " current" : ""}`}
+            onClick={() => setCurrentPage(page)}
           >
             {page + 1}
           </div>
         ))}
-        {pages[pages.length - 1] < totalPages - 1 && (
+        {pageBlock[pageBlock.length - 1] < totalPages - 1 && (
           <div
             className="page"
-            onClick={() => {
-              loadPage(pages[pages.length - 1] + 1)
-            }}
+            onClick={() =>
+              setCurrentPage(pageBlock[pageBlock.length - 1] + 1)
+            }
           >
             다음
           </div>
         )}
       </div>
     </>
-  )
-}
-
-const DeleteGuestBookModal = ({
-  postId,
-  onSuccess,
-}: {
-  postId: number
-  onSuccess: () => void
-}) => {
-  const inputRef = useRef({} as HTMLInputElement)
-  const { closeModal } = useModal()
-  const [loading, setLoading] = useState(false)
-
-  return (
-    <form
-      id="guestbook-delete-form"
-      className="form"
-      onSubmit={async (e) => {
-        e.preventDefault()
-        setLoading(true)
-        try {
-          const password = inputRef.current.value
-          if (!password || password.length < RULES.password.minLength) {
-            alert(`비밀번호를 ${RULES.password.minLength}자 이상 입력해주세요.`)
-            return
-          }
-
-          if (password.length > RULES.password.maxLength) {
-            alert(
-              `비밀번호를 ${RULES.password.maxLength}자 이하로 입력해주세요.`,
-            )
-            return
-          }
-
-          const result = await fetch(`${SERVER_URL}/guestbook`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: postId, password }),
-          })
-
-          if (!result.ok) {
-            if (result.status === 403) {
-              alert("비밀번호가 일치하지 않습니다.")
-            } else {
-              alert("방명록 삭제에 실패했습니다.")
-            }
-            return
-          }
-
-          alert("삭제되었습니다.")
-          closeModal()
-          onSuccess()
-        } catch {
-          alert("방명록 삭제에 실패했습니다.")
-        } finally {
-          setLoading(false)
-        }
-      }}
-    >
-      <input
-        disabled={loading}
-        type="password"
-        placeholder="비밀번호를 입력해주세요."
-        className="password"
-        ref={inputRef}
-        maxLength={RULES.password.maxLength}
-      />
-    </form>
   )
 }

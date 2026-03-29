@@ -7,10 +7,11 @@ import { Calendar } from "./component/calendar"
 import { Gallery } from "./component/gallery"
 import { Information } from "./component/information"
 import { GuestBook } from "./component/guestbook"
+import { Notice } from "./component/notice"
 import { LazyDiv } from "./component/lazyDiv"
 import { ShareButton } from "./component/shareButton"
 import { MusicPlayer } from "./component/musicPlayer"
-import { STATIC_ONLY } from "./env"
+import { isFirebaseConfigured } from "./lib/firebase"
 
 function App() {
   return (
@@ -36,13 +37,17 @@ function App() {
         <LazyDiv className="card-group">
           {/* 오시는길 */}
           <Location />
+
+          {/* 안내사항 (NOTICE_TABS에 내용이 있을 때만 표시) */}
+          <Notice />
         </LazyDiv>
 
         <LazyDiv className="card-group">
           {/* 마음 전하기 */}
           <Information />
-          {/* 방명록 */}
-          {!STATIC_ONLY && <GuestBook />}
+
+          {/* 방명록 (Firebase 설정 시 표시) */}
+          {isFirebaseConfigured && <GuestBook />}
         </LazyDiv>
 
         <ShareButton />

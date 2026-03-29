@@ -80,6 +80,16 @@ export const SHUTTLE_INFO: string[] = [
   // 예: "양재역 5번 출구 앞 / 12:00부터 10분 간격 운행",
 ]
 
+// 안내사항 탭. label과 content를 입력하면 페이지에 표시됩니다.
+// content가 비어있는 탭은 자동으로 숨겨집니다.
+// 탭이 하나도 없거나 모든 content가 비어있으면 안내사항 섹션 자체가 표시되지 않습니다.
+// 예: { label: "주차", content: "지하 2층~5층 주차 가능\n2시간 무료 (접수대에서 등록)" }
+export const NOTICE_TABS: Array<{ label: string; content: string }> = [
+  // { label: "주차", content: "" },
+  // { label: "식사", content: "" },
+  // { label: "기타", content: "" },
+]
+
 export const GROOM_INFO = [
   {
     relation: "신랑",

@@ -1,0 +1,49 @@
+.notice {
+  .notice-title {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-bottom: 1.2rem;
+  }
+
+  .tab-bar {
+    display: flex;
+    border-bottom: 2px solid var(--light-grey-color);
+    margin-bottom: 1.2rem;
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.6rem 0.5rem;
+      font-size: 0.9rem;
+      color: var(--dark-grey-color);
+      position: relative;
+      transition: color 0.2s;
+
+      &.active {
+        color: var(--theme-color);
+        font-weight: bold;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: var(--theme-color);
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    min-height: 4rem;
+    padding: 0 0.5rem;
+
+    p {
+      margin: 0;
+    }
+  }
+}
