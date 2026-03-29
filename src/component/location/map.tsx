@@ -148,18 +148,8 @@ const NaverMap = () => {
         </button>
         <button
           onClick={() => {
-            switch (checkDevice()) {
-              case "ios":
-              case "android": {
-                const [goalx, goaly] = WEDDING_HALL_POSITION
-                window.location.href = `tmap://route?goalx=${goalx}&goaly=${goaly}&goalName=${encodeURIComponent(LOCATION)}`
-                break
-              }
-              default: {
-                alert("모바일에서 확인하실 수 있습니다.")
-                break
-              }
-            }
+            const [goalx, goaly] = WEDDING_HALL_POSITION
+            window.location.href = `tmap://route?goalx=${goalx}&goaly=${goaly}&goalName=${encodeURIComponent(LOCATION)}`
           }}
         >
           <img src={tmapIcon} alt="t-map-icon" />
