@@ -151,12 +151,8 @@ const NaverMap = () => {
             switch (checkDevice()) {
               case "ios":
               case "android": {
-                const params = new URLSearchParams({
-                  goalx: WEDDING_HALL_POSITION[0].toString(),
-                  goaly: WEDDING_HALL_POSITION[1].toString(),
-                  goalName: LOCATION,
-                })
-                window.open(`tmap://route?${params.toString()}`, "_self")
+                const [goalx, goaly] = WEDDING_HALL_POSITION
+                window.location.href = `tmap://route?goalx=${goalx}&goaly=${goaly}&goalName=${encodeURIComponent(LOCATION)}`
                 break
               }
               default: {
