@@ -43,9 +43,9 @@ export const Location = () => {
           <div className="content">
             * 지하철 이용 시
             <br />
-            신분당선 · 3호선 <b>양재역</b> 출구
+            신분당선 <b>양재시민의숲역</b> 4번 출구
             <br />
-            → 버스 또는 택시 이용
+            → 도보 600m
           </div>
           <div />
           <div className="content">
