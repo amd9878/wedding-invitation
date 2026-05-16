@@ -13,14 +13,14 @@
 @use "./component/musicPlayer";
 
 :root {
-  --theme-color: #c9a96e;
+  --theme-color: #a36b4f;
   --theme-bg-color: #e8e0d0;
   --alt-color: #8a7045;
   --alt-bg-color: #3d3730;
   --dark-color: #1a1714;
   --dark-grey-color: #b8b2a8;
   --light-grey-color: #e0d8cc;
-  --light-color: #f5f0e8;
+  --light-color: #f6f3f2;
   --white-color: #ffffff;
   --red-color: #c0392b;
 
@@ -99,7 +99,7 @@ body {
 }
 
 .background {
-  background-color: #c8bba0;
+  background-color: #e4dcd3;
   display: flex;
   flex-direction: column;
   align-items: center;
