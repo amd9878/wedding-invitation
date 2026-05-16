@@ -1,4 +1,4 @@
-export const COVER_IMAGE = "https://i.imgur.com/74vIWT9.jpeg"
+export const COVER_IMAGE = "https://i.imgur.com/5uxI60Z.jpeg"
 
 export const GALLERY_IMAGES = [
   "https://i.imgur.com/5uxI60Z.jpeg",
