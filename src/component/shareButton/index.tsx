@@ -38,6 +38,8 @@ export const ShareButton = () => {
               description:
                 WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
               imageUrl: "https://i.imgur.com/5uxI60Z.jpeg",
+              imageWidth: 800,
+              imageHeight: 800,
               link: {
                 mobileWebUrl: pageUrl,
                 webUrl: pageUrl,
