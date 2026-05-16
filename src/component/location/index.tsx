@@ -64,12 +64,9 @@ export const Location = () => {
           <div className="heading">자가용</div>
           <div />
           <div className="content">
-            네이버 지도, 카카오 네비, 티맵 등 이용
+            <b>현대자동차 본사</b> 검색
             <br />
-            <b>{LOCATION}</b> 검색
-            <br />
-            {/* TODO: 주차 안내 정보로 업데이트해 주세요 */}
-            - 주차장 이용 가능
+            또는 <b>하나로마트 양재점</b> 검색
           </div>
         </div>
       </LazyDiv>
