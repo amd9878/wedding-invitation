@@ -45,17 +45,17 @@ export const ShareButton = () => {
             },
             buttons: [
               {
-                title: "카카오맵 오시는 길",
+                title: "초대장 보기",
                 link: {
-                  mobileWebUrl: KAKAO_MAP_URL,
-                  webUrl: KAKAO_MAP_URL,
+                  mobileWebUrl: pageUrl,
+                  webUrl: pageUrl,
                 },
               },
               {
-                title: "네이버지도 오시는 길",
+                title: "위치 보기",
                 link: {
-                  mobileWebUrl: NAVER_MAP_URL,
-                  webUrl: NAVER_MAP_URL,
+                  mobileWebUrl: pageUrl + "?map=1",
+                  webUrl: pageUrl + "?map=1",
                 },
               },
             ],

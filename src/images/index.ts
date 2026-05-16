@@ -1,16 +1,9 @@
 export const COVER_IMAGE = "https://i.imgur.com/74vIWT9.jpeg"
 
 export const GALLERY_IMAGES = [
-  "https://i.imgur.com/l9OL8VH.jpeg",
-  "https://i.imgur.com/cdUJPML.png",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
-  "https://imgur.com/cdUJPML",
+  "https://i.imgur.com/5uxI60Z.jpeg",
+  "https://i.imgur.com/0E8octA.jpeg",
+  "https://i.imgur.com/DrhW2kK.jpeg",
+  "https://i.imgur.com/bYVq0U3.jpeg",
+  "https://i.imgur.com/0xWaQdW.jpeg",
 ]

@@ -124,3 +124,47 @@
     }
   }
 }
+
+.map-select-modal {
+  width: 18rem;
+
+  .header {
+    .title-group {
+      text-align: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--dark-grey-color);
+      .title {
+        font-size: 1.2rem;
+        color: var(--theme-color);
+        padding: 0.3rem;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .content {
+    padding: 0.7rem;
+
+    .map-select-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
