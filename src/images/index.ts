@@ -10,7 +10,7 @@ export const GALLERY_IMAGES = [
   "https://i.imgur.com/bMQa9dq.jpeg",
   "https://i.imgur.com/Op2a91j.jpeg",
   "https://i.imgur.com/74vIWT9.jpeg",
-  "https://i.imgur.com/dPRpRjD.jpeg",
+  "https://i.imgur.com/5ayc5l2.jpeg",
   "https://i.imgur.com/5pHpKx6.jpeg",
   "https://i.imgur.com/HxZkZNr.jpeg",
 ]
