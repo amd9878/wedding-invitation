@@ -18,6 +18,7 @@ export const HOLIDAYS: number[] = []
 
 export const LOCATION = "현대자동차 본사"
 export const LOCATION_ADDRESS = "현대자동차 본사 2층 서관 방면 그랜드 홀"
+export const SHARE_LOCATION = "현대자동차 본사 그랜드 홀"
 
 // 카카오톡 공유 시 위치 정보로 사용할 주소.
 // LOCATION 과 동일하게 설정해도 무방하나, 필요에 따라 좀 더 상세히 작성 가능.

@@ -1,7 +1,7 @@
 import {
   BRIDE_FULLNAME,
   GROOM_FULLNAME,
-  LOCATION,
+  SHARE_LOCATION,
   WEDDING_DATE,
   WEDDING_DATE_FORMAT,
 } from "../../const"
@@ -31,7 +31,7 @@ export const ShareButton = () => {
             content: {
               title: `${GROOM_FULLNAME} ❤️ ${BRIDE_FULLNAME}의 결혼식에 초대합니다.`,
               description:
-                WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + LOCATION,
+                WEDDING_DATE.format(WEDDING_DATE_FORMAT) + "\n" + SHARE_LOCATION,
               imageUrl: "https://i.imgur.com/5uxI60Z.jpeg",
               imageWidth: 800,
               imageHeight: 800,
