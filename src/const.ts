@@ -47,19 +47,19 @@ export const BRIDE_INFO = [
     relation: "신부",
     name: BRIDE_FULLNAME,
     phone: "010-7407-3250",
-    account: "우리은행 0000000000000",
+    account: "하나은행 16391047152607",
   },
   {
     relation: "신부 아버지",
     name: BRIDE_FATHER,
     phone: "010-0000-0000",
-    account: "하나은행 00000000000",
+    account: "국민은행 49360201014648",
   },
   {
     relation: "신부 어머니",
     name: BRIDE_MOTHER,
     phone: "010-0000-0000",
-    account: "하나은행 00000000000000",
+    account: "국민은행 49360201014648",
   },
 ]
 
@@ -93,7 +93,7 @@ export const NOTICE_TABS: Array<{ label: string; content: string }> = [
   {
     label: "식사",
     content:
-      "식권은 축의금 접수대에서 받으실 수 있습니다.\n\n필요한 매수를 말씀해 주시면\n접수 담당자가 드립니다.",
+      "식사 시간 : 11시 30분 ~ 14시 30분\n장소 : 지하 1층 식당 12th ST\n\n식권은 축의금 접수대에서 받으실 수 있습니다.\n\n필요한 매수를 말씀해 주시면\n접수 담당자가 드립니다.",
   },
 ]
 

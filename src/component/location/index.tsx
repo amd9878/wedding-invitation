@@ -66,7 +66,7 @@ export const Location = () => {
           <div className="content">
             <b>현대자동차 본사</b> 검색
             <br />
-            또는 <b>하나로마트 양재점</b> 검색
+            ※ 아래 주차 안내 부분 참고해주세요
           </div>
         </div>
       </LazyDiv>
