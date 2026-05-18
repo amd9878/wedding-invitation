@@ -9,7 +9,7 @@ dayjs.locale("ko")
 
 export { dayjs }
 
-export const WEDDING_DATE = dayjs.tz("2026-07-05 13:00", "Asia/Seoul")
+export const WEDDING_DATE = dayjs.tz("2026-07-05 12:00", "Asia/Seoul")
 export const WEDDING_DATE_FORMAT = `YYYY년 MMMM D일 dddd A h시${WEDDING_DATE.minute() === 0 ? "" : " m분"}`
 
 // 예식 당월 휴무일. 켈린더에 표시하기 위함.
@@ -88,7 +88,7 @@ export const NOTICE_TABS: Array<{ label: string; content: string }> = [
   {
     label: "주차",
     content:
-      "현대자동차 본사 건물 주차타워 지상 1층 ~ 8층 주차 가능합니다.\n별도 주차등록은 필요하지 않습니다.\n만차 시에는 하나로마트 주차장 2시간 무료 주차 가능합니다.",
+      "현대자동차 본사 건물 내 주차타워\n지상 1층 ~ 8층 주차 가능합니다.\n\n별도 주차 등록은 필요하지 않으며,\n만차 시에는 하나로마트 양재 주차장에\n2시간 무료 주차가 가능합니다.",
   },
 ]
 

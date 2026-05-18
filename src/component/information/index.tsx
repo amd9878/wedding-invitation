@@ -100,30 +100,30 @@ export const Information2 = () => {
               header: <div className="title">신부측 계좌번호</div>,
               content: (
                 <>
-                  {BRIDE_INFO.filter(({ account }) => !!account).map(
+                  {BRIDE_INFO.map(
                     ({ relation, name, account }) => (
                       <div className="account-info" key={relation}>
                         <div>
                           <div className="name">
                             <span className="relation">{relation}</span> {name}
                           </div>
-                          <div>{account}</div>
+                          {account && <div>{account}</div>}
                         </div>
-                        <Button
-                          className="copy-button"
-                          onClick={async () => {
-                            if (account) {
+                        {account && (
+                          <Button
+                            className="copy-button"
+                            onClick={async () => {
                               try {
                                 navigator.clipboard.writeText(account)
                                 alert(account + "\n복사되었습니다.")
                               } catch {
                                 alert("복사에 실패했습니다.")
                               }
-                            }
-                          }}
-                        >
-                          복사하기
-                        </Button>
+                            }}
+                          >
+                            복사하기
+                          </Button>
+                        )}
                       </div>
                     ),
                   )}
