@@ -10,7 +10,6 @@ import {
   BRIDE_FULLNAME,
   WEDDING_DATE,
   SHARE_LOCATION,
-  WEDDING_DATE_FORMAT,
 } from "./src/const"
 
 const distFolder = "build"
@@ -34,7 +33,7 @@ export default defineConfig({
         data: {
           GROOM_FULLNAME,
           BRIDE_FULLNAME,
-          DESCRIPTION: `${WEDDING_DATE.format(WEDDING_DATE_FORMAT)} ${SHARE_LOCATION}`,
+          DESCRIPTION: `${WEDDING_DATE.format("dddd A h시")}\n${SHARE_LOCATION}`,
         },
       },
     }),
