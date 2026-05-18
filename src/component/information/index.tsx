@@ -1,4 +1,4 @@
-import { BRIDE_INFO, GROOM_INFO } from "../../const"
+import { BRIDE_INFO, GROOM_INFO, PARKING_INFO } from "../../const"
 import { STATIC_ONLY } from "../../env"
 import { Button } from "../button"
 import { LazyDiv } from "../lazyDiv"
@@ -15,6 +15,14 @@ export const Information1 = () => {
           식사시간 : 11시 30분 ~ 14시 30분
           <br />
           장소 : 지하 1층 식당 12th ST
+        </div>
+      </div>
+      <div className="info-card">
+        <div className="label">주차 안내</div>
+        <div className="content">
+          {PARKING_INFO.split("\n").map((line, i) =>
+            line === "" ? <br key={i} /> : <span key={i}>{line}<br /></span>
+          )}
         </div>
       </div>
     </>
