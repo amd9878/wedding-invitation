@@ -17,14 +17,6 @@ export const Information1 = () => {
           장소 : 지하 1층 식당 12th ST
         </div>
       </div>
-      <div className="info-card">
-        <div className="label">주차 안내</div>
-        <div className="content">
-          {PARKING_INFO.split("\n").map((line, i) =>
-            line === "" ? <br key={i} /> : <span key={i}>{line}<br /></span>
-          )}
-        </div>
-      </div>
     </>
   )
 }
@@ -34,6 +26,14 @@ export const Information2 = () => {
 
   return (
     <>
+      <div className="info-card">
+        <div className="label">주차 안내</div>
+        <div className="content">
+          {PARKING_INFO.split("\n").map((line, i) =>
+            line === "" ? <br key={i} /> : <span key={i}>{line}<br /></span>
+          )}
+        </div>
+      </div>
       <div className="info-card">
         <div className="label">마음 전하기</div>
         <div className="content">
