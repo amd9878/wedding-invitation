@@ -33,7 +33,7 @@ export default defineConfig({
         data: {
           GROOM_FULLNAME,
           BRIDE_FULLNAME,
-          DESCRIPTION: `${WEDDING_DATE.format("dddd A h시")}\n${SHARE_LOCATION}`,
+          DESCRIPTION: `${WEDDING_DATE.format("YYYY년 M월 D일 dddd A h시")}\n${SHARE_LOCATION}`,
         },
       },
     }),
