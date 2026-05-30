@@ -11,7 +11,7 @@ export const GALLERY_IMAGES = [
   "https://i.imgur.com/ilCnYmM.jpeg",
   "https://i.imgur.com/l9OL8VH.jpeg",
   "https://i.imgur.com/bMQa9dq.jpeg",
-  "https://i.imgur.com/74vIWT9.jpeg",
+  "https://i.imgur.com/LKSPG2g.jpeg",
   "https://i.imgur.com/5ayc5l2.jpeg",
   "https://i.imgur.com/5pHpKx6.jpeg",
   "https://i.imgur.com/HxZkZNr.jpeg",
