@@ -12,7 +12,7 @@ export const Information1 = () => {
     <>
       <h2 className="english">Information</h2>
       {NOTICE_IMAGE && (
-        <div className="info-card notice-image-card">
+        <div className="notice-image-card">
           <img
             src={NOTICE_IMAGE}
             alt="안내사항"
