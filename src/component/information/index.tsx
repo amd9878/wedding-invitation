@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { BRIDE_INFO, GROOM_INFO, NOTICE_IMAGE, PARKING_INFO } from "../../const"
 import { STATIC_ONLY } from "../../env"
 import { Button } from "../button"
@@ -6,37 +7,23 @@ import { useModal } from "../modal"
 import { AttendanceInfo } from "./attendance"
 
 export const Information1 = () => {
-  const { openModal, closeModal } = useModal()
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   return (
     <>
       <h2 className="english">Information</h2>
       {NOTICE_IMAGE && (
-        <div className="notice-image-card">
-          <img
-            src={NOTICE_IMAGE}
-            alt="안내사항"
-            className="notice-image"
-            onClick={() =>
-              openModal({
-                className: "notice-image-modal",
-                closeOnClickBackground: true,
-                content: (
-                  <img src={NOTICE_IMAGE} alt="안내사항" style={{ width: "100%" }} />
-                ),
-                footer: (
-                  <Button
-                    buttonStyle="style2"
-                    className="bg-light-grey-color text-dark-color"
-                    onClick={closeModal}
-                  >
-                    닫기
-                  </Button>
-                ),
-              })
-            }
-          />
-        </div>
+        <>
+          <div className="notice-image-card" onClick={() => setLightboxOpen(true)}>
+            <img src={NOTICE_IMAGE} alt="안내사항" />
+          </div>
+          {lightboxOpen && (
+            <div className="notice-lightbox" onClick={() => setLightboxOpen(false)}>
+              <img src={NOTICE_IMAGE} alt="안내사항" onClick={(e) => e.stopPropagation()} />
+              <button className="notice-lightbox-close" onClick={() => setLightboxOpen(false)}>✕</button>
+            </div>
+          )}
+        </>
       )}
       <div className="info-card">
         <div className="label">식사 안내</div>

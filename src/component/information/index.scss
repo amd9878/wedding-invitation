@@ -1,14 +1,29 @@
-.notice-image-modal {
-  width: 90vw;
-  max-width: 600px;
+.notice-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .content {
-    padding: 0;
+  img {
+    max-width: 92vw;
+    max-height: 90vh;
+    object-fit: contain;
   }
 
-  .footer {
-    display: flex;
-    flex-direction: column;
+  .notice-lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
   }
 }
 
