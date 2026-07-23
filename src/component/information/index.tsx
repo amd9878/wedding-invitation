@@ -6,21 +6,41 @@ import { LazyDiv } from "../lazyDiv"
 import { useModal } from "../modal"
 import { AttendanceInfo } from "./attendance"
 
+const enableZoom = () => {
+  const viewport = document.querySelector('meta[name="viewport"]')
+  if (viewport) viewport.setAttribute("content", "width=device-width, initial-scale=1")
+}
+
+const disableZoom = () => {
+  const viewport = document.querySelector('meta[name="viewport"]')
+  if (viewport) viewport.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0")
+}
+
 export const Information1 = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false)
+
+  const openLightbox = () => {
+    enableZoom()
+    setLightboxOpen(true)
+  }
+
+  const closeLightbox = () => {
+    disableZoom()
+    setLightboxOpen(false)
+  }
 
   return (
     <>
       <h2 className="english">Information</h2>
       {NOTICE_IMAGE && (
         <>
-          <div className="notice-image-card" onClick={() => setLightboxOpen(true)}>
+          <div className="notice-image-card" onClick={openLightbox}>
             <img src={NOTICE_IMAGE} alt="안내사항" />
           </div>
           {lightboxOpen && (
-            <div className="notice-lightbox" onClick={() => setLightboxOpen(false)}>
+            <div className="notice-lightbox" onClick={closeLightbox}>
               <img src={NOTICE_IMAGE} alt="안내사항" onClick={(e) => e.stopPropagation()} />
-              <button className="notice-lightbox-close" onClick={() => setLightboxOpen(false)}>✕</button>
+              <button className="notice-lightbox-close" onClick={closeLightbox}>✕</button>
             </div>
           )}
         </>
