@@ -87,6 +87,8 @@ export const SHUTTLE_INFO: string[] = [
 // 예: { label: "주차", content: "지하 2층~5층 주차 가능\n2시간 무료 (접수대에서 등록)" }
 export const NOTICE_TABS: Array<{ label: string; content: string }> = []
 
+export const NOTICE_IMAGE = ""
+
 export const PARKING_INFO =
   "현대자동차 본사 건물 내 주차타워\n지상 1층 ~ 8층 주차 가능합니다.\n\n별도 주차 등록은 필요하지 않으며,\n만차 시 하나로마트 양재점에 주차 가능합니다.\n(1시간 무료 / 초과요금 개인부담)"
 
